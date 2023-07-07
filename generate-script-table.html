@@ -36,9 +36,12 @@
     }
     document.querySelector('form').append(datalist)
 
-    document.querySelector('input[name="script-name"]')
-    .addEventListener('change', e => {
-        let input = e.target;
+    // document.querySelector('input[name="script-name"]')
+    document.querySelector('form')
+    .addEventListener('submit', e => {
+      e.preventDefault()
+        let input = e.target.elements['script-name']
+        console.log(input.value)
         let datalist = document.querySelector("#script-names")
         let selectedOption = getSelectedOption(datalist, input.value)
 
@@ -50,7 +53,7 @@
         output.append(generateScriptTable(lower, upper));
     });
 
-    addEventListener('submit', e => {
+    addEventListener('wassubmit', e => {
       e.preventDefault()
       const scriptName = e.target.elements['script-name'].value
       let output = document.querySelector('output')

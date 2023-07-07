@@ -4,4 +4,4 @@
 
   <https://amundo.github.io/generate-script-table/generate-script-table.html>
 
-  the interface doesn't really work because i borked the events and ohwell
+
