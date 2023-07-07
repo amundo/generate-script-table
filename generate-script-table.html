@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>generate unicode script table</title>
+  <link rel="icon" type="image/png" href="#">
+</head>
+<body>
+  <h1>generate unicode script table</h1>
+
+  <form>
+    <input list="script-names" name="script-name">
+    <button type=submit>Build table</button>
+    <datalist id="script-names"></datalist>
+  </form>
+
+  <output></output>
+
+  <script type="module">
+    import {generateScriptTable} from './generate-script-table.js'
+    import {getSelectedOption} from './get-selected-datalist-option.js'
+
+    
+    let response = await fetch('unicode-script-ranges.json')
+    let ranges = await response.json()
+    let datalist = document.querySelector('datalist')
+    
+    datalist.id = 'script-names'
+    for (let range of ranges) {
+      let option = document.createElement('option')
+      option.value = range.name
+      option.dataset.lower = range.lower
+      option.dataset.upper = range.upper
+      datalist.append(option)
+    }
+    document.querySelector('form').append(datalist)
+
+    document.querySelector('input[name="script-name"]')
+    .addEventListener('change', e => {
+        let input = e.target;
+        let datalist = document.querySelector("#script-names")
+        let selectedOption = getSelectedOption(datalist, input.value)
+
+        let lower = selectedOption.dataset.lower;
+        let upper = selectedOption.dataset.upper;
+
+        let output = document.querySelector('output');
+        output.innerHTML = '';
+        output.append(generateScriptTable(lower, upper));
+    });
+
+    addEventListener('submit', e => {
+      e.preventDefault()
+      const scriptName = e.target.elements['script-name'].value
+      let output = document.querySelector('output')
+      output.innerHTML = ''
+      output.append(generateScriptTable(scriptName))
+    })
+  </script>
+</body>
+</html>
